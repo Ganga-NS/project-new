@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="card-container">
+    <div class="card">
+        <h1>Create Account</h1>
+        <p class="subtitle">Join the Smart City Identity Framework</p>
+
+        <form method="POST" action="{{ url_for('signup') }}">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="e.g. jdoe" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="e.g. john@city.gov" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+            </div>
+
+            <div class="form-group">
+                <label for="role">Register as</label>
+                <select id="role" name="role" onchange="toggleAdminCode()">
+                    <option value="User">City Resident (User)</option>
+                    <option value="Admin">City Administrator (Admin)</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="admin_code_group" style="display: none;">
+                <label for="admin_code">Admin Secret Code</label>
+                <input type="password" id="admin_code" name="admin_code" placeholder="Enter Security Code">
+                <small class="help-text">Required only for Admin registration.</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+        </form>
+
+        <div class="card-footer">
+            Already have an account? <a href="{{ url_for('login') }}">Login Here</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleAdminCode() {
+        const role = document.getElementById('role').value;
+        const adminGroup = document.getElementById('admin_code_group');
+        adminGroup.style.display = (role === 'Admin') ? 'block' : 'none';
+    }
+</script>
+{% endblock %}

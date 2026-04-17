@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1>Admin Control Center</h1>
+    <p>City Administration and Service Management</p>
+</div>
+
+<div class="admin-grid">
+    <!-- Registered Users Section -->
+    <div class="user-list">
+        <h2>Registered Residents</h2>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td><span class="badge badge-role-{{ user.role|lower }}">{{ user.role }}</span></td>
+                            <td><span class="status-indicator online"></span> Active</td>
+                            <td>
+                                {% if user.id != current_user.id %}
+                                    <button class="btn btn-danger btn-sm" onclick="deleteUser({{ user.id }}, '{{ user.username }}')">Delete</button>
+                                {% else %}
+                                    <span class="text-muted">You</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Service Requests Section -->
+    <div class="request-management">
+        <h2>Incoming Service Requests</h2>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Service</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in all_requests %}
+                        <tr>
+                            <td>#{{ req.id }}</td>
+                            <td>{{ req.user.username }}</td>
+                            <td>{{ req.service_name }}</td>
+                            <td><span class="badge badge-{{ req.status|lower }}">{{ req.status }}</span></td>
+                            <td class="admin-actions">
+                                {% if req.status == 'Pending' %}
+                                    <button class="btn btn-success btn-sm" onclick="updateStatus({{ req.id }}, 'Approved')">Approve</button>
+                                    <button class="btn btn-danger btn-sm" onclick="updateStatus({{ req.id }}, 'Rejected')">Reject</button>
+                                {% elif req.status == 'Approved' %}
+                                    <button class="btn btn-info btn-sm" onclick="updateStatus({{ req.id }}, 'Completed')">Complete</button>
+                                {% else %}
+                                    <span class="text-muted">Finalized</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

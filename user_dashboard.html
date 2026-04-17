@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1>Smart City Dashboard</h1>
+    <p>Secure Gateway for Resident Services</p>
+</div>
+
+<div class="dashboard-grid">
+    <!-- Traffic Service -->
+    <div class="service-card traffic">
+        <div class="service-icon">🚦</div>
+        <h2>Traffic Management</h2>
+        <p>Real-time traffic flow control and road incident reporting.</p>
+        <div class="service-actions">
+            <button class="btn btn-info" onclick="showServiceDetails('Traffic')">View Details</button>
+            <button class="btn btn-primary" onclick="confirmRequest('Traffic')">Request Service</button>
+        </div>
+    </div>
+
+    <!-- Water Service -->
+    <div class="service-card water">
+        <div class="service-icon">💧</div>
+        <h2>Water Supply</h2>
+        <p>Efficient water distribution and quality monitoring system.</p>
+        <div class="service-actions">
+            <button class="btn btn-info" onclick="showServiceDetails('Water')">View Details</button>
+            <button class="btn btn-primary" onclick="confirmRequest('Water')">Request Service</button>
+        </div>
+    </div>
+
+    <!-- Electricity Service -->
+    <div class="service-card electricity">
+        <div class="service-icon">⚡️</div>
+        <h2>Electricity & Power</h2>
+        <p>Smart grid management and renewable energy integration.</p>
+        <div class="service-actions">
+            <button class="btn btn-info" onclick="showServiceDetails('Electricity')">View Details</button>
+            <button class="btn btn-primary" onclick="confirmRequest('Electricity')">Request Service</button>
+        </div>
+    </div>
+</div>
+
+<div class="request-history mt-2">
+    <h2>Your Service Requests</h2>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Service Name</th>
+                    <th>Status</th>
+                    <th>Date & Time</th>
+                </tr>
+            </thead>
+            <tbody id="request-list">
+                {% if requests %}
+                    {% for req in requests %}
+                        <tr>
+                            <td>{{ req.service_name }}</td>
+                            <td><span class="badge badge-{{ req.status|lower }}">{{ req.status }}</span></td>
+                            <td>{{ req.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">No service requests found.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Popups (Modals) -->
+<div id="serviceModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('serviceModal')">&times;</span>
+        <h2 id="modal-title">Service Details</h2>
+        <div id="modal-body"></div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('serviceModal')">Close</button>
+        </div>
+    </div>
+</div>
+
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+        <h2>Confirm Request</h2>
+        <p id="confirm-msg"></p>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('confirmModal')">Cancel</button>
+            <button class="btn btn-primary" id="confirm-btn">Yes, Request!</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
